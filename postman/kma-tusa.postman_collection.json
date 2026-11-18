@@ -1,10 +1,1850 @@
 {
   "info": {
     "name": "KMA Tusa API",
-    "description": "Усі ендпоінти бекенду KMA Tusa: успішні запити та запити з помилками.\n\nБазова адреса сервера задана у змінній колекції base_url. Запити «Створити ...» зберігають id нового запису у змінні new_*_id, тому колекцію зручно запускати по порядку через Run collection на базі з демо-даними (python manage.py loaddata demo).",
+    "description": "Усі ендпоінти бекенду KMA Tusa: реєстрація, логін, оновлення токена, права доступу та CRUD, успішні запити й запити з помилками.\n\nБазова адреса сервера задана у змінній колекції base_url. Запити папки «Авторизація» логінять демо-користувачів і зберігають токени у змінні user_access, user_refresh та admin_access; папки ресурсів надсилають їх у заголовку Authorization: Bearer <token>. Запити «Створити ...» зберігають id нового запису у змінні new_*_id. Тому колекцію запускають по порядку через Run collection на базі з демо-даними (python manage.py loaddata demo users).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
+    {
+      "name": "Авторизація",
+      "item": [
+        {
+          "name": "Реєстрація нового користувача",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 201\", function () {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Пароль не повертається у відповіді\", function () {",
+                  "  pm.expect(pm.response.json()).to.not.have.property(\"password\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/register/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"student_{{$timestamp}}\",\n  \"first_name\": \"Тарас\",\n  \"last_name\": \"Шевченко\",\n  \"email\": \"student_{{$timestamp}}@example.com\",\n  \"password\": \"Mohyla2026pass\",\n  \"password_confirm\": \"Mohyla2026pass\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/auth/register/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "register",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"student_{{$timestamp}}\",\n  \"first_name\": \"Тарас\",\n  \"last_name\": \"Шевченко\",\n  \"email\": \"student_{{$timestamp}}@example.com\",\n  \"password\": \"Mohyla2026pass\",\n  \"password_confirm\": \"Mohyla2026pass\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 103,\n  \"username\": \"student_1794975039\",\n  \"first_name\": \"Тарас\",\n  \"last_name\": \"Шевченко\",\n  \"email\": \"student_1794975039@example.com\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 400: порожні обов'язкові поля",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/register/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/auth/register/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "register",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"username\": [\n    \"Це поле обов'язкове.\"\n  ],\n  \"email\": [\n    \"Це поле обов'язкове.\"\n  ],\n  \"password\": [\n    \"Це поле обов'язкове.\"\n  ],\n  \"password_confirm\": [\n    \"Це поле обов'язкове.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 400: некоректний email і короткий пароль",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/register/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"new_student\",\n  \"email\": \"not-an-email\",\n  \"password\": \"123\",\n  \"password_confirm\": \"123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/auth/register/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "register",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"new_student\",\n  \"email\": \"not-an-email\",\n  \"password\": \"123\",\n  \"password_confirm\": \"123\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"email\": [\n    \"Введіть коректну адресу електронної пошти.\"\n  ],\n  \"password\": [\n    \"Переконайтесь, що в цьому полі мінімум 8 символів.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 400: паролі не збігаються і пароль слабкий",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/register/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"new_student\",\n  \"email\": \"new_student@example.com\",\n  \"password\": \"12345678\",\n  \"password_confirm\": \"12345679\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/auth/register/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "register",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"new_student\",\n  \"email\": \"new_student@example.com\",\n  \"password\": \"12345678\",\n  \"password_confirm\": \"12345679\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"password_confirm\": [\n    \"Паролі не збігаються.\"\n  ],\n  \"password\": [\n    \"Пароль занадто поширений.\",\n    \"Цей пароль повністю складається із цифр.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 400: username і email вже зайняті",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/register/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"tusa_student\",\n  \"email\": \"student@kmatusa.example\",\n  \"password\": \"Mohyla2026pass\",\n  \"password_confirm\": \"Mohyla2026pass\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/auth/register/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "register",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"tusa_student\",\n  \"email\": \"student@kmatusa.example\",\n  \"password\": \"Mohyla2026pass\",\n  \"password_confirm\": \"Mohyla2026pass\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"username\": [\n    \"Користувач з таким ім'ям вже існує.\"\n  ],\n  \"email\": [\n    \"Користувач з таким email вже існує.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Логін користувача",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set(\"user_access\", pm.response.json().access);",
+                  "pm.collectionVariables.set(\"user_refresh\", pm.response.json().refresh);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/login/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"tusa_student\",\n  \"password\": \"TusaStudent2026\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/auth/login/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "login",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"tusa_student\",\n  \"password\": \"TusaStudent2026\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.<payload>.<signature>\",\n  \"access\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.<payload>.<signature>\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Логін адміністратора",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set(\"admin_access\", pm.response.json().access);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/login/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"tusa_admin\",\n  \"password\": \"TusaAdmin2026\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/auth/login/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "login",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"tusa_admin\",\n  \"password\": \"TusaAdmin2026\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.<payload>.<signature>\",\n  \"access\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.<payload>.<signature>\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 401: неправильний пароль",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "pm.test(\"Є пояснення в detail\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.property(\"detail\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/login/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"tusa_student\",\n  \"password\": \"wrong-password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "401 Unauthorized",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/auth/login/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "login",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"tusa_student\",\n  \"password\": \"wrong-password\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Неправильне ім'я користувача або пароль.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 400: логін без даних",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/login/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/auth/login/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "login",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"username\": [\n    \"Це поле обов'язкове.\"\n  ],\n  \"password\": [\n    \"Це поле обов'язкове.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Оновити access-токен",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set(\"user_access\", pm.response.json().access);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/refresh/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "refresh",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"{{user_refresh}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/auth/refresh/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "refresh",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"refresh\": \"{{user_refresh}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"access\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.<payload>.<signature>\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 401: невалідний refresh-токен",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "pm.test(\"Є пояснення в detail\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.property(\"detail\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/refresh/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "refresh",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"invalid-token\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "401 Unauthorized",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/auth/refresh/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "refresh",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"refresh\": \"invalid-token\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Token is invalid\",\n  \"code\": \"token_not_valid\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Поточний користувач",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/me/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "me",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{user_access}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/auth/me/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "me",
+                    ""
+                  ]
+                },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{user_access}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 102,\n  \"username\": \"tusa_student\",\n  \"first_name\": \"Олена\",\n  \"last_name\": \"Коваль\",\n  \"email\": \"student@kmatusa.example\",\n  \"is_staff\": false\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 401: поточний користувач без токена",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "pm.test(\"Є пояснення в detail\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.property(\"detail\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/me/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "me",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "401 Unauthorized",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/auth/me/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "me",
+                    ""
+                  ]
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Реквізити перевірки достовірності не надані.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 401: невалідний access-токен",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "pm.test(\"Є пояснення в detail\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.property(\"detail\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/me/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "me",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "invalid.token.value",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "401 Unauthorized",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/auth/me/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "me",
+                    ""
+                  ]
+                },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "invalid.token.value",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Given token not valid for any token type\",\n  \"code\": \"token_not_valid\",\n  \"messages\": [\n    {\n      \"token_class\": \"AccessToken\",\n      \"token_type\": \"access\",\n      \"message\": \"Token is invalid\"\n    }\n  ]\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Права доступу",
+      "item": [
+        {
+          "name": "Гість бачить список тусовок",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/events/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "events",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/events/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "events",
+                    ""
+                  ]
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 1,\n    \"title\": \"Посвята першокурсників\",\n    \"description\": \"Знайомство з Могилянкою та одне одним. Донати на збір.\",\n    \"starts_at\": \"2026-09-19T20:00:00+03:00\",\n    \"ends_at\": \"2026-09-20T02:00:00+03:00\",\n    \"lineup\": \"DJ Ворон\",\n    \"dress_code\": \"\",\n    \"entry_type\": \"donation\",\n    \"price\": 0,\n    \"min_donation\": 100,\n    \"fundraising_purpose\": \"Збір на FPV-дрони для підрозділу випускників КМА\",\n    \"fundraising_url\": \"https://example.com/jar/fpv-drones\",\n    \"fundraising_goal\": 50000,\n    \"capacity\": 150,\n    \"organizer\": 1,\n    \"venue\": 1,\n    \"category\": 1,\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  },\n  {\n    \"id\": 2,\n    \"title\": \"Ніч настолок у «Лігві»\",\n    \"description\": \"Від «Кодових імен» до «Twilight Imperium». Правила пояснимо.\",\n    \"starts_at\": \"2026-11-07T18:00:00+02:00\",\n    \"ends_at\": \"2026-11-07T23:30:00+02:00\",\n    \"lineup\": \"\",\n    \"dress_code\": \"\",\n    \"entry_type\": \"ticket\",\n    \"price\": 100,\n    \"min_donation\": null,\n    \"fundraising_purpose\": \"\",\n    \"fundraising_url\": \"\",\n    \"fundraising_goal\": null,\n    \"capacity\": 30,\n    \"organizer\": 3,\n    \"venue\": 3,\n    \"category\": 3,\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  },\n  {\n    \"id\": 3,\n    \"title\": \"Вечірка «Мокрий листопад»\",\n    \"description\": \"Осіння вечірка з трьома діджеями. Усі донати йдуть на збір.\",\n    \"starts_at\": \"2026-11-14T21:00:00+02:00\",\n    \"ends_at\": \"2026-11-15T03:00:00+02:00\",\n    \"lineup\": \"DJ Ворон, DJ Pumpkin, Ліза Хвиля\",\n    \"dress_code\": \"Щось жовте або синє\",\n    \"entry_type\": \"donation\",\n    \"price\": 0,\n    \"min_donation\": 200,\n    \"fundraising_purpose\": \"Збір на FPV-дрони для підрозділу випускників КМА\",\n    \"fundraising_url\": \"https://example.com/jar/fpv-drones\",\n    \"fundraising_goal\": 50000,\n    \"capacity\": 150,\n    \"organizer\": 1,\n    \"venue\": 1,\n    \"category\": 1,\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  },\n  {\n    \"id\": 4,\n    \"title\": \"Квартирник: акустика при свічках\",\n    \"description\": \"Три акустичні сети, чай і розмови до ночі. Вхід вільний, але можна закинути на збір.\",\n    \"starts_at\": \"2026-11-21T19:00:00+02:00\",\n    \"ends_at\": \"2026-11-21T23:00:00+02:00\",\n    \"lineup\": \"Гурт «Сірий кіт», Марта Ліщук\",\n    \"dress_code\": \"Вільний, взуття знімаємо на вході\",\n    \"entry_type\": \"free\",\n    \"price\": 0,\n    \"min_donation\": null,\n    \"fundraising_purpose\": \"Збір на теплові приціли\",\n    \"fundraising_url\": \"https://example.com/jar/thermal-scopes\",\n    \"fundraising_goal\": null,\n    \"capacity\": 25,\n    \"organizer\": 2,\n    \"venue\": 2,\n    \"category\": 2,\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  },\n  {\n    \"id\": 5,\n    \"title\": \"Кіновечір: «Тіні забутих предків»\",\n    \"description\": \"Дивимось класику Параджанова, після показу обговорення.\",\n    \"starts_at\": \"2026-11-27T18:30:00+02:00\",\n    \"ends_at\": \"2026-11-27T21:30:00+02:00\",\n    \"lineup\": \"\",\n    \"dress_code\": \"\",\n    \"entry_type\": \"free\",\n    \"price\": 0,\n    \"min_donation\": null,\n    \"fundraising_purpose\": \"\",\n    \"fundraising_url\": \"\",\n    \"fundraising_goal\": null,\n    \"capacity\": 60,\n    \"organizer\": 4,\n    \"venue\": 4,\n    \"category\": 5,\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  },\n  {\n    \"id\": 6,\n    \"title\": \"Караоке-батл факультетів\",\n    \"description\": \"ФІ проти ФЕН проти ФГН. Переможець отримує кубок і вічну славу.\",\n    \"starts_at\": \"2026-12-05T20:00:00+02:00\",\n    \"ends_at\": \"2026-12-06T01:00:00+02:00\",\n    \"lineup\": \"Ведуча — Оля Співоча\",\n    \"dress_code\": \"\",\n    \"entry_type\": \"donation\",\n    \"price\": 0,\n    \"min_donation\": null,\n    \"fundraising_purpose\": \"Збір на евакуаційне авто\",\n    \"fundraising_url\": \"https://example.com/jar/evacuation-car\",\n    \"fundraising_goal\": 120000,\n    \"capacity\": 80,\n    \"organizer\": 1,\n    \"venue\": 5,\n    \"category\": 4,\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  },\n  {\n    \"id\": 7,\n    \"title\": \"Новорічна тусовка Могилянки\",\n    \"description\": \"Головна вечірка року. Половина з кожного квитка йде на збір.\",\n    \"starts_at\": \"2026-12-20T21:00:00+02:00\",\n    \"ends_at\": \"2026-12-21T04:00:00+02:00\",\n    \"lineup\": \"DJ Ворон, Kyiv Brass Band\",\n    \"dress_code\": \"Святковий\",\n    \"entry_type\": \"ticket\",\n    \"price\": 300,\n    \"min_donation\": null,\n    \"fundraising_purpose\": \"Збір на евакуаційне авто\",\n    \"fundraising_url\": \"https://example.com/jar/evacuation-car\",\n    \"fundraising_goal\": 120000,\n    \"capacity\": 200,\n    \"organizer\": 1,\n    \"venue\": 1,\n    \"category\": 1,\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  },\n  {\n    \"id\": 8,\n    \"title\": \"Зимовий пікнік з глінтвейном\",\n    \"description\": \"Сніжки, термоси та гітара. Збираємось біля мосту.\",\n    \"starts_at\": \"2027-01-24T13:00:00+02:00\",\n    \"ends_at\": null,\n    \"lineup\": \"\",\n    \"dress_code\": \"Тепло вдягніться\",\n    \"entry_type\": \"donation\",\n    \"price\": 0,\n    \"min_donation\": 100,\n    \"fundraising_purpose\": \"Збір на теплові приціли\",\n    \"fundraising_url\": \"https://example.com/jar/thermal-scopes\",\n    \"fundraising_goal\": null,\n    \"capacity\": 60,\n    \"organizer\": 2,\n    \"venue\": 6,\n    \"category\": 6,\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 401: гість створює тусовку",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "pm.test(\"Є пояснення в detail\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.property(\"detail\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/events/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "events",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Благодійна вечірка «Грудневий вайб»\",\n  \"description\": \"Вечірка з діджеями, усі донати йдуть на збір.\",\n  \"starts_at\": \"2026-12-12T21:00:00+02:00\",\n  \"ends_at\": \"2026-12-13T03:00:00+02:00\",\n  \"lineup\": \"DJ Ворон, DJ Pumpkin\",\n  \"dress_code\": \"Щось блискуче\",\n  \"entry_type\": \"donation\",\n  \"price\": 0,\n  \"min_donation\": 150,\n  \"fundraising_purpose\": \"Збір на FPV-дрони\",\n  \"fundraising_url\": \"https://example.com/jar/fpv-drones\",\n  \"fundraising_goal\": 50000,\n  \"capacity\": 120,\n  \"organizer\": 1,\n  \"venue\": 1,\n  \"category\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "401 Unauthorized",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/events/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "events",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Благодійна вечірка «Грудневий вайб»\",\n  \"description\": \"Вечірка з діджеями, усі донати йдуть на збір.\",\n  \"starts_at\": \"2026-12-12T21:00:00+02:00\",\n  \"ends_at\": \"2026-12-13T03:00:00+02:00\",\n  \"lineup\": \"DJ Ворон, DJ Pumpkin\",\n  \"dress_code\": \"Щось блискуче\",\n  \"entry_type\": \"donation\",\n  \"price\": 0,\n  \"min_donation\": 150,\n  \"fundraising_purpose\": \"Збір на FPV-дрони\",\n  \"fundraising_url\": \"https://example.com/jar/fpv-drones\",\n  \"fundraising_goal\": 50000,\n  \"capacity\": 120,\n  \"organizer\": 1,\n  \"venue\": 1,\n  \"category\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Реквізити перевірки достовірності не надані.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 401: гість видаляє організатора",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 401\", function () {",
+                  "  pm.response.to.have.status(401);",
+                  "});",
+                  "pm.test(\"Є пояснення в detail\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.property(\"detail\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/organizers/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "organizers",
+                "1",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": [
+            {
+              "name": "401 Unauthorized",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/organizers/1/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "organizers",
+                    "1",
+                    ""
+                  ]
+                },
+                "auth": {
+                  "type": "noauth"
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Реквізити перевірки достовірності не надані.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 403: користувач створює категорію",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 403\", function () {",
+                  "  pm.response.to.have.status(403);",
+                  "});",
+                  "pm.test(\"Є пояснення в detail\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.property(\"detail\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categories/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Стендап\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{user_access}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "403 Forbidden",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/categories/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "categories",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Стендап\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{user_access}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Цю дію може виконати лише адміністратор.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 403: користувач редагує локацію",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 403\", function () {",
+                  "  pm.response.to.have.status(403);",
+                  "});",
+                  "pm.test(\"Є пояснення в detail\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.property(\"detail\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/venues/2/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "venues",
+                "2",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Квартира на Подолі\",\n  \"type\": \"apartment\",\n  \"district\": \"Поділ\",\n  \"address\": \"вул. Сковороди, 5, кв. 12\",\n  \"capacity\": 30\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{user_access}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "403 Forbidden",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/venues/2/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "venues",
+                    "2",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Квартира на Подолі\",\n  \"type\": \"apartment\",\n  \"district\": \"Поділ\",\n  \"address\": \"вул. Сковороди, 5, кв. 12\",\n  \"capacity\": 30\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{user_access}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Цю дію може виконати лише адміністратор.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 403: користувач видаляє категорію",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 403\", function () {",
+                  "  pm.response.to.have.status(403);",
+                  "});",
+                  "pm.test(\"Є пояснення в detail\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.property(\"detail\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                "1",
+                ""
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{user_access}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "403 Forbidden",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/categories/1/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "categories",
+                    "1",
+                    ""
+                  ]
+                },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{user_access}}",
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Цю дію може виконати лише адміністратор.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
     {
       "name": "Категорії",
       "item": [
@@ -663,7 +2503,17 @@
             }
           ]
         }
-      ]
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{admin_access}}",
+            "type": "string"
+          }
+        ]
+      }
     },
     {
       "name": "Організатори",
@@ -936,7 +2786,7 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"id\": 5,\n  \"name\": \"Студентське братство вечірок\",\n  \"description\": \"Організовуємо вечірки на Подолі.\",\n  \"contact_email\": \"bratstvo@example.com\",\n  \"instagram_url\": \"https://instagram.com/example_bratstvo\",\n  \"created_at\": \"2026-11-18T03:04:24.796178+02:00\"\n}"
+              "body": "{\n  \"id\": 5,\n  \"name\": \"Студентське братство вечірок\",\n  \"description\": \"Організовуємо вечірки на Подолі.\",\n  \"contact_email\": \"bratstvo@example.com\",\n  \"instagram_url\": \"https://instagram.com/example_bratstvo\",\n  \"created_at\": \"2026-11-18T06:10:41.139673+02:00\"\n}"
             }
           ]
         },
@@ -1199,7 +3049,7 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"id\": 5,\n  \"name\": \"Студентське братство вечірок\",\n  \"description\": \"Організовуємо благодійні вечірки на Подолі.\",\n  \"contact_email\": \"bratstvo@example.com\",\n  \"instagram_url\": \"https://instagram.com/example_bratstvo\",\n  \"created_at\": \"2026-11-18T03:04:24.796178+02:00\"\n}"
+              "body": "{\n  \"id\": 5,\n  \"name\": \"Студентське братство вечірок\",\n  \"description\": \"Організовуємо благодійні вечірки на Подолі.\",\n  \"contact_email\": \"bratstvo@example.com\",\n  \"instagram_url\": \"https://instagram.com/example_bratstvo\",\n  \"created_at\": \"2026-11-18T06:10:41.139673+02:00\"\n}"
             }
           ]
         },
@@ -1323,7 +3173,17 @@
             }
           ]
         }
-      ]
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{user_access}}",
+            "type": "string"
+          }
+        ]
+      }
     },
     {
       "name": "Локації",
@@ -1896,7 +3756,17 @@
             }
           ]
         }
-      ]
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{admin_access}}",
+            "type": "string"
+          }
+        ]
+      }
     },
     {
       "name": "Тусовки",
@@ -2169,7 +4039,7 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"id\": 9,\n  \"title\": \"Благодійна вечірка «Грудневий вайб»\",\n  \"description\": \"Вечірка з діджеями, усі донати йдуть на збір.\",\n  \"starts_at\": \"2026-12-12T21:00:00+02:00\",\n  \"ends_at\": \"2026-12-13T03:00:00+02:00\",\n  \"lineup\": \"DJ Ворон, DJ Pumpkin\",\n  \"dress_code\": \"Щось блискуче\",\n  \"entry_type\": \"donation\",\n  \"price\": 0,\n  \"min_donation\": 150,\n  \"fundraising_purpose\": \"Збір на FPV-дрони\",\n  \"fundraising_url\": \"https://example.com/jar/fpv-drones\",\n  \"fundraising_goal\": 50000,\n  \"capacity\": 120,\n  \"organizer\": 1,\n  \"venue\": 1,\n  \"category\": 1,\n  \"created_at\": \"2026-11-18T03:04:24.860954+02:00\"\n}"
+              "body": "{\n  \"id\": 9,\n  \"title\": \"Благодійна вечірка «Грудневий вайб»\",\n  \"description\": \"Вечірка з діджеями, усі донати йдуть на збір.\",\n  \"starts_at\": \"2026-12-12T21:00:00+02:00\",\n  \"ends_at\": \"2026-12-13T03:00:00+02:00\",\n  \"lineup\": \"DJ Ворон, DJ Pumpkin\",\n  \"dress_code\": \"Щось блискуче\",\n  \"entry_type\": \"donation\",\n  \"price\": 0,\n  \"min_donation\": 150,\n  \"fundraising_purpose\": \"Збір на FPV-дрони\",\n  \"fundraising_url\": \"https://example.com/jar/fpv-drones\",\n  \"fundraising_goal\": 50000,\n  \"capacity\": 120,\n  \"organizer\": 1,\n  \"venue\": 1,\n  \"category\": 1,\n  \"created_at\": \"2026-11-18T06:10:41.260028+02:00\"\n}"
             }
           ]
         },
@@ -2519,7 +4389,7 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"id\": 9,\n  \"title\": \"Благодійна вечірка «Грудневий вайб»\",\n  \"description\": \"Вечірка з діджеями, усі донати йдуть на збір.\",\n  \"starts_at\": \"2026-12-12T21:00:00+02:00\",\n  \"ends_at\": \"2026-12-13T03:00:00+02:00\",\n  \"lineup\": \"DJ Ворон, DJ Pumpkin, special guest\",\n  \"dress_code\": \"Щось блискуче\",\n  \"entry_type\": \"donation\",\n  \"price\": 0,\n  \"min_donation\": 100,\n  \"fundraising_purpose\": \"Збір на FPV-дрони\",\n  \"fundraising_url\": \"https://example.com/jar/fpv-drones\",\n  \"fundraising_goal\": 50000,\n  \"capacity\": 120,\n  \"organizer\": 1,\n  \"venue\": 1,\n  \"category\": 1,\n  \"created_at\": \"2026-11-18T03:04:24.860954+02:00\"\n}"
+              "body": "{\n  \"id\": 9,\n  \"title\": \"Благодійна вечірка «Грудневий вайб»\",\n  \"description\": \"Вечірка з діджеями, усі донати йдуть на збір.\",\n  \"starts_at\": \"2026-12-12T21:00:00+02:00\",\n  \"ends_at\": \"2026-12-13T03:00:00+02:00\",\n  \"lineup\": \"DJ Ворон, DJ Pumpkin, special guest\",\n  \"dress_code\": \"Щось блискуче\",\n  \"entry_type\": \"donation\",\n  \"price\": 0,\n  \"min_donation\": 100,\n  \"fundraising_purpose\": \"Збір на FPV-дрони\",\n  \"fundraising_url\": \"https://example.com/jar/fpv-drones\",\n  \"fundraising_goal\": 50000,\n  \"capacity\": 120,\n  \"organizer\": 1,\n  \"venue\": 1,\n  \"category\": 1,\n  \"created_at\": \"2026-11-18T06:10:41.260028+02:00\"\n}"
             }
           ]
         },
@@ -2643,7 +4513,17 @@
             }
           ]
         }
-      ]
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{user_access}}",
+            "type": "string"
+          }
+        ]
+      }
     },
     {
       "name": "Загальні помилки",
@@ -2781,6 +4661,16 @@
                   "language": "json"
                 }
               }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_access}}",
+                  "type": "string"
+                }
+              ]
             }
           },
           "response": [
@@ -2812,6 +4702,16 @@
                       "language": "json"
                     }
                   }
+                },
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{admin_access}}",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "status": "Bad Request",
@@ -2827,13 +4727,35 @@
             }
           ]
         }
-      ]
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{user_access}}",
+            "type": "string"
+          }
+        ]
+      }
     }
   ],
   "variable": [
     {
       "key": "base_url",
       "value": "http://127.0.0.1:8000/api"
+    },
+    {
+      "key": "user_access",
+      "value": ""
+    },
+    {
+      "key": "user_refresh",
+      "value": ""
+    },
+    {
+      "key": "admin_access",
+      "value": ""
     },
     {
       "key": "new_category_id",

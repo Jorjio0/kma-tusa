@@ -1,7 +1,9 @@
-from rest_framework import status
+from rest_framework import permissions, status
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from accounts.permissions import IsAdminOrReadOnly
 
 from .models import Category, Event, Organizer, Venue
 from .serializers import (
@@ -13,6 +15,8 @@ from .serializers import (
 
 
 class CategoryList(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+
     def get(self, request):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
@@ -27,6 +31,8 @@ class CategoryList(APIView):
 
 
 class CategoryDetail(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+
     def get_object(self, pk):
         try:
             return Category.objects.get(pk=pk)
@@ -63,6 +69,8 @@ class CategoryDetail(APIView):
 
 
 class OrganizerList(APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
     def get(self, request):
         organizers = Organizer.objects.all()
         serializer = OrganizerSerializer(organizers, many=True)
@@ -77,6 +85,8 @@ class OrganizerList(APIView):
 
 
 class OrganizerDetail(APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
     def get_object(self, pk):
         try:
             return Organizer.objects.get(pk=pk)
@@ -113,6 +123,8 @@ class OrganizerDetail(APIView):
 
 
 class VenueList(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+
     def get(self, request):
         venues = Venue.objects.all()
         serializer = VenueSerializer(venues, many=True)
@@ -127,6 +139,8 @@ class VenueList(APIView):
 
 
 class VenueDetail(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+
     def get_object(self, pk):
         try:
             return Venue.objects.get(pk=pk)
@@ -163,6 +177,8 @@ class VenueDetail(APIView):
 
 
 class EventList(APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
     def get(self, request):
         events = Event.objects.all()
         serializer = EventSerializer(events, many=True)
@@ -177,6 +193,8 @@ class EventList(APIView):
 
 
 class EventDetail(APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
     def get_object(self, pk):
         try:
             return Event.objects.get(pk=pk)
