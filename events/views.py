@@ -48,6 +48,16 @@ class CategoryDetail(APIView):
 
     def delete(self, request, pk):
         category = self.get_object(pk)
+        events_count = category.events.count()
+        if events_count > 0:
+            return Response(
+                {
+                    "detail": f"Неможливо видалити категорію {category.name}: "
+                    f"у ній є тусовки ({events_count}). "
+                    "Спершу перенесіть їх в іншу категорію."
+                },
+                status=status.HTTP_409_CONFLICT,
+            )
         category.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -88,6 +98,16 @@ class OrganizerDetail(APIView):
 
     def delete(self, request, pk):
         organizer = self.get_object(pk)
+        events_count = organizer.events.count()
+        if events_count > 0:
+            return Response(
+                {
+                    "detail": f"Неможливо видалити організатора {organizer.name}: "
+                    f"за ним закріплені тусовки ({events_count}). "
+                    "Спершу видаліть їх або передайте іншому організатору."
+                },
+                status=status.HTTP_409_CONFLICT,
+            )
         organizer.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -128,6 +148,16 @@ class VenueDetail(APIView):
 
     def delete(self, request, pk):
         venue = self.get_object(pk)
+        events_count = venue.events.count()
+        if events_count > 0:
+            return Response(
+                {
+                    "detail": f"Неможливо видалити локацію {venue.name}: "
+                    f"у ній заплановані тусовки ({events_count}). "
+                    "Спершу перенесіть їх в іншу локацію."
+                },
+                status=status.HTTP_409_CONFLICT,
+            )
         venue.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
