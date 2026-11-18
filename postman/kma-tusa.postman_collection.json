@@ -1,0 +1,2855 @@
+{
+  "info": {
+    "name": "KMA Tusa API",
+    "description": "Усі ендпоінти бекенду KMA Tusa: успішні запити та запити з помилками.\n\nБазова адреса сервера задана у змінній колекції base_url. Запити «Створити ...» зберігають id нового запису у змінні new_*_id, тому колекцію зручно запускати по порядку через Run collection на базі з демо-даними (python manage.py loaddata demo).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Категорії",
+      "item": [
+        {
+          "name": "Список категорій",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/categories/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "categories",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Вечірка\"\n  },\n  {\n    \"id\": 4,\n    \"name\": \"Караоке\"\n  },\n  {\n    \"id\": 2,\n    \"name\": \"Квартирник\"\n  },\n  {\n    \"id\": 5,\n    \"name\": \"Кіновечір\"\n  },\n  {\n    \"id\": 3,\n    \"name\": \"Ніч настолок\"\n  },\n  {\n    \"id\": 6,\n    \"name\": \"Пікнік\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Категорія за id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories/2/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                "2",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/categories/2/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "categories",
+                    "2",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 2,\n  \"name\": \"Квартирник\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 404: категорії не існує",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 404\", function () {",
+                  "  pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Є пояснення в detail\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.property(\"detail\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories/999/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                "999",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "404 Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/categories/999/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "categories",
+                    "999",
+                    ""
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Категорію не знайдено.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Створити категорію",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 201\", function () {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"new_category_id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categories/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Стендап\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/categories/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "categories",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Стендап\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 7,\n  \"name\": \"Стендап\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 400: порожня назва",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categories/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/categories/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "categories",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": [\n    \"Це поле не може бути порожнім.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 400: категорія вже існує",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categories/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Караоке\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/categories/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "categories",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Караоке\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": [\n    \"Категорія з такою назвою вже існує.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Оновити категорію",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categories/{{new_category_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                "{{new_category_id}}",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Стендап і open mic\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/categories/{{new_category_id}}/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "categories",
+                    "{{new_category_id}}",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Стендап і open mic\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 7,\n  \"name\": \"Стендап і open mic\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 409: видалити категорію з тусовками",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 409\", function () {",
+                  "  pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"Є пояснення в detail\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.property(\"detail\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                "1",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "409 Conflict",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/categories/1/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "categories",
+                    "1",
+                    ""
+                  ]
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Неможливо видалити категорію Вечірка: у ній є тусовки (3). Спершу перенесіть їх в іншу категорію.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Видалити категорію",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 204\", function () {",
+                  "  pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories/{{new_category_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                "{{new_category_id}}",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "204 No Content",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/categories/{{new_category_id}}/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "categories",
+                    "{{new_category_id}}",
+                    ""
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Організатори",
+      "item": [
+        {
+          "name": "Список організаторів",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/organizers/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "organizers",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/organizers/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "organizers",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Kyiv-Mohyla Party Crew\",\n    \"description\": \"Студентська команда, яка щомісяця робить тематичні благодійні вечірки.\",\n    \"contact_email\": \"partycrew@example.com\",\n    \"instagram_url\": \"https://instagram.com/example_party_crew\",\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  },\n  {\n    \"id\": 2,\n    \"name\": \"Акустичні вечори КМА\",\n    \"description\": \"Камерні квартирники з живою музикою від студентів і випускників.\",\n    \"contact_email\": \"acoustic@example.com\",\n    \"instagram_url\": \"\",\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  },\n  {\n    \"id\": 3,\n    \"name\": \"Клуб настолок «Кубик»\",\n    \"description\": \"Збираємось грати в настолки: від «Каркасона» до восьмигодинних стратегій.\",\n    \"contact_email\": \"\",\n    \"instagram_url\": \"https://instagram.com/example_kubyk\",\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  },\n  {\n    \"id\": 4,\n    \"name\": \"Кіноклуб «Могилянський кадр»\",\n    \"description\": \"Дивимось і обговорюємо українське та світове кіно.\",\n    \"contact_email\": \"kino@example.com\",\n    \"instagram_url\": \"\",\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Організатор за id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/organizers/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "organizers",
+                "1",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/organizers/1/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "organizers",
+                    "1",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1,\n  \"name\": \"Kyiv-Mohyla Party Crew\",\n  \"description\": \"Студентська команда, яка щомісяця робить тематичні благодійні вечірки.\",\n  \"contact_email\": \"partycrew@example.com\",\n  \"instagram_url\": \"https://instagram.com/example_party_crew\",\n  \"created_at\": \"2026-10-01T12:00:00+03:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 404: організатора не існує",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 404\", function () {",
+                  "  pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Є пояснення в detail\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.property(\"detail\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/organizers/999/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "organizers",
+                "999",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "404 Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/organizers/999/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "organizers",
+                    "999",
+                    ""
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Організатора не знайдено.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Створити організатора",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 201\", function () {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"new_organizer_id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/organizers/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "organizers",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Студентське братство вечірок\",\n  \"description\": \"Організовуємо вечірки на Подолі.\",\n  \"contact_email\": \"bratstvo@example.com\",\n  \"instagram_url\": \"https://instagram.com/example_bratstvo\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/organizers/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "organizers",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Студентське братство вечірок\",\n  \"description\": \"Організовуємо вечірки на Подолі.\",\n  \"contact_email\": \"bratstvo@example.com\",\n  \"instagram_url\": \"https://instagram.com/example_bratstvo\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 5,\n  \"name\": \"Студентське братство вечірок\",\n  \"description\": \"Організовуємо вечірки на Подолі.\",\n  \"contact_email\": \"bratstvo@example.com\",\n  \"instagram_url\": \"https://instagram.com/example_bratstvo\",\n  \"created_at\": \"2026-11-18T03:04:24.796178+02:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 400: некоректні дані",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/organizers/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "organizers",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\",\n  \"contact_email\": \"not-an-email\",\n  \"instagram_url\": \"instagram\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/organizers/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "organizers",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"\",\n  \"contact_email\": \"not-an-email\",\n  \"instagram_url\": \"instagram\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": [\n    \"Це поле не може бути порожнім.\"\n  ],\n  \"contact_email\": [\n    \"Введіть коректну адресу електронної пошти.\"\n  ],\n  \"instagram_url\": [\n    \"Введіть коректний URL.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 400: назва вже зайнята",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/organizers/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "organizers",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Kyiv-Mohyla Party Crew\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/organizers/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "organizers",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Kyiv-Mohyla Party Crew\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": [\n    \"Організатор з такою назвою вже існує.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Оновити організатора",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/organizers/{{new_organizer_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "organizers",
+                "{{new_organizer_id}}",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Студентське братство вечірок\",\n  \"description\": \"Організовуємо благодійні вечірки на Подолі.\",\n  \"contact_email\": \"bratstvo@example.com\",\n  \"instagram_url\": \"https://instagram.com/example_bratstvo\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/organizers/{{new_organizer_id}}/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "organizers",
+                    "{{new_organizer_id}}",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Студентське братство вечірок\",\n  \"description\": \"Організовуємо благодійні вечірки на Подолі.\",\n  \"contact_email\": \"bratstvo@example.com\",\n  \"instagram_url\": \"https://instagram.com/example_bratstvo\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 5,\n  \"name\": \"Студентське братство вечірок\",\n  \"description\": \"Організовуємо благодійні вечірки на Подолі.\",\n  \"contact_email\": \"bratstvo@example.com\",\n  \"instagram_url\": \"https://instagram.com/example_bratstvo\",\n  \"created_at\": \"2026-11-18T03:04:24.796178+02:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 409: видалити організатора з тусовками",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 409\", function () {",
+                  "  pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"Є пояснення в detail\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.property(\"detail\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/organizers/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "organizers",
+                "1",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "409 Conflict",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/organizers/1/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "organizers",
+                    "1",
+                    ""
+                  ]
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Неможливо видалити організатора Kyiv-Mohyla Party Crew: за ним закріплені тусовки (4). Спершу видаліть їх або передайте іншому організатору.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Видалити організатора",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 204\", function () {",
+                  "  pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/organizers/{{new_organizer_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "organizers",
+                "{{new_organizer_id}}",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "204 No Content",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/organizers/{{new_organizer_id}}/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "organizers",
+                    "{{new_organizer_id}}",
+                    ""
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Локації",
+      "item": [
+        {
+          "name": "Список локацій",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/venues/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "venues",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/venues/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "venues",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 3,\n    \"name\": \"Антикафе «Лігво»\",\n    \"type\": \"other\",\n    \"district\": \"Поділ\",\n    \"address\": \"вул. Нижній Вал, 15\",\n    \"description\": \"Антикафе з великою колекцією настільних ігор.\",\n    \"capacity\": 40\n  },\n  {\n    \"id\": 5,\n    \"name\": \"Бар «Підвал»\",\n    \"type\": \"bar\",\n    \"district\": \"Печерськ\",\n    \"address\": \"вул. Шовковична, 20\",\n    \"description\": \"Бар з караоке-системою.\",\n    \"capacity\": 90\n  },\n  {\n    \"id\": 4,\n    \"name\": \"Кампус НаУКМА, корпус 1\",\n    \"type\": \"campus\",\n    \"district\": \"Поділ\",\n    \"address\": \"вул. Григорія Сковороди, 2\",\n    \"description\": \"Аудиторія 1-225 з проєктором.\",\n    \"capacity\": 80\n  },\n  {\n    \"id\": 2,\n    \"name\": \"Квартира на Подолі\",\n    \"type\": \"apartment\",\n    \"district\": \"Поділ\",\n    \"address\": \"вул. Костянтинівська, 10, кв. 5\",\n    \"description\": \"Затишна квартира для квартирників.\",\n    \"capacity\": 25\n  },\n  {\n    \"id\": 1,\n    \"name\": \"Лофт «Цех»\",\n    \"type\": \"loft\",\n    \"district\": \"Поділ\",\n    \"address\": \"вул. Набережно-Лугова, 8\",\n    \"description\": \"Індустріальна зала з баром і танцполом.\",\n    \"capacity\": 200\n  },\n  {\n    \"id\": 6,\n    \"name\": \"Пейзажна алея\",\n    \"type\": \"outdoor\",\n    \"district\": \"Шевченківський\",\n    \"address\": \"біля мосту закоханих\",\n    \"description\": \"Просто неба, місткість не обмежена.\",\n    \"capacity\": null\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Локація за id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/venues/2/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "venues",
+                "2",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/venues/2/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "venues",
+                    "2",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 2,\n  \"name\": \"Квартира на Подолі\",\n  \"type\": \"apartment\",\n  \"district\": \"Поділ\",\n  \"address\": \"вул. Костянтинівська, 10, кв. 5\",\n  \"description\": \"Затишна квартира для квартирників.\",\n  \"capacity\": 25\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 404: локації не існує",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 404\", function () {",
+                  "  pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Є пояснення в detail\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.property(\"detail\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/venues/999/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "venues",
+                "999",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "404 Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/venues/999/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "venues",
+                    "999",
+                    ""
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Локацію не знайдено.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Створити локацію",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 201\", function () {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"new_venue_id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/venues/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "venues",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Квартира на Оболоні\",\n  \"type\": \"apartment\",\n  \"district\": \"Оболонь\",\n  \"address\": \"просп. Оболонський, 1, кв. 10\",\n  \"description\": \"Квартира для невеликих квартирників.\",\n  \"capacity\": 20\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/venues/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "venues",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Квартира на Оболоні\",\n  \"type\": \"apartment\",\n  \"district\": \"Оболонь\",\n  \"address\": \"просп. Оболонський, 1, кв. 10\",\n  \"description\": \"Квартира для невеликих квартирників.\",\n  \"capacity\": 20\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 7,\n  \"name\": \"Квартира на Оболоні\",\n  \"type\": \"apartment\",\n  \"district\": \"Оболонь\",\n  \"address\": \"просп. Оболонський, 1, кв. 10\",\n  \"description\": \"Квартира для невеликих квартирників.\",\n  \"capacity\": 20\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 400: невідомий тип і нульова місткість",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/venues/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "venues",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"VIP-зала\",\n  \"type\": \"vip\",\n  \"district\": \"Поділ\",\n  \"address\": \"вул. Сковороди, 2\",\n  \"capacity\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/venues/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "venues",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"VIP-зала\",\n  \"type\": \"vip\",\n  \"district\": \"Поділ\",\n  \"address\": \"вул. Сковороди, 2\",\n  \"capacity\": 0\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": [\n    \"\\\"vip\\\" не є коректним вибором.\"\n  ],\n  \"capacity\": [\n    \"Переконайтесь, що значення більше або дорівнює 1.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Оновити локацію",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/venues/{{new_venue_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "venues",
+                "{{new_venue_id}}",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Квартира на Оболоні\",\n  \"type\": \"apartment\",\n  \"district\": \"Оболонь\",\n  \"address\": \"просп. Оболонський, 1, кв. 10\",\n  \"description\": \"Квартира для невеликих квартирників.\",\n  \"capacity\": 25\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/venues/{{new_venue_id}}/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "venues",
+                    "{{new_venue_id}}",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Квартира на Оболоні\",\n  \"type\": \"apartment\",\n  \"district\": \"Оболонь\",\n  \"address\": \"просп. Оболонський, 1, кв. 10\",\n  \"description\": \"Квартира для невеликих квартирників.\",\n  \"capacity\": 25\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 7,\n  \"name\": \"Квартира на Оболоні\",\n  \"type\": \"apartment\",\n  \"district\": \"Оболонь\",\n  \"address\": \"просп. Оболонський, 1, кв. 10\",\n  \"description\": \"Квартира для невеликих квартирників.\",\n  \"capacity\": 25\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 409: видалити локацію з тусовками",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 409\", function () {",
+                  "  pm.response.to.have.status(409);",
+                  "});",
+                  "pm.test(\"Є пояснення в detail\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.property(\"detail\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/venues/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "venues",
+                "1",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "409 Conflict",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/venues/1/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "venues",
+                    "1",
+                    ""
+                  ]
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Неможливо видалити локацію Лофт «Цех»: у ній заплановані тусовки (3). Спершу перенесіть їх в іншу локацію.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Видалити локацію",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 204\", function () {",
+                  "  pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/venues/{{new_venue_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "venues",
+                "{{new_venue_id}}",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "204 No Content",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/venues/{{new_venue_id}}/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "venues",
+                    "{{new_venue_id}}",
+                    ""
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Тусовки",
+      "item": [
+        {
+          "name": "Список тусовок",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/events/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "events",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/events/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "events",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 1,\n    \"title\": \"Посвята першокурсників\",\n    \"description\": \"Знайомство з Могилянкою та одне одним. Донати на збір.\",\n    \"starts_at\": \"2026-09-19T20:00:00+03:00\",\n    \"ends_at\": \"2026-09-20T02:00:00+03:00\",\n    \"lineup\": \"DJ Ворон\",\n    \"dress_code\": \"\",\n    \"entry_type\": \"donation\",\n    \"price\": 0,\n    \"min_donation\": 100,\n    \"fundraising_purpose\": \"Збір на FPV-дрони для підрозділу випускників КМА\",\n    \"fundraising_url\": \"https://example.com/jar/fpv-drones\",\n    \"fundraising_goal\": 50000,\n    \"capacity\": 150,\n    \"organizer\": 1,\n    \"venue\": 1,\n    \"category\": 1,\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  },\n  {\n    \"id\": 2,\n    \"title\": \"Ніч настолок у «Лігві»\",\n    \"description\": \"Від «Кодових імен» до «Twilight Imperium». Правила пояснимо.\",\n    \"starts_at\": \"2026-11-07T18:00:00+02:00\",\n    \"ends_at\": \"2026-11-07T23:30:00+02:00\",\n    \"lineup\": \"\",\n    \"dress_code\": \"\",\n    \"entry_type\": \"ticket\",\n    \"price\": 100,\n    \"min_donation\": null,\n    \"fundraising_purpose\": \"\",\n    \"fundraising_url\": \"\",\n    \"fundraising_goal\": null,\n    \"capacity\": 30,\n    \"organizer\": 3,\n    \"venue\": 3,\n    \"category\": 3,\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  },\n  {\n    \"id\": 3,\n    \"title\": \"Вечірка «Мокрий листопад»\",\n    \"description\": \"Осіння вечірка з трьома діджеями. Усі донати йдуть на збір.\",\n    \"starts_at\": \"2026-11-14T21:00:00+02:00\",\n    \"ends_at\": \"2026-11-15T03:00:00+02:00\",\n    \"lineup\": \"DJ Ворон, DJ Pumpkin, Ліза Хвиля\",\n    \"dress_code\": \"Щось жовте або синє\",\n    \"entry_type\": \"donation\",\n    \"price\": 0,\n    \"min_donation\": 200,\n    \"fundraising_purpose\": \"Збір на FPV-дрони для підрозділу випускників КМА\",\n    \"fundraising_url\": \"https://example.com/jar/fpv-drones\",\n    \"fundraising_goal\": 50000,\n    \"capacity\": 150,\n    \"organizer\": 1,\n    \"venue\": 1,\n    \"category\": 1,\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  },\n  {\n    \"id\": 4,\n    \"title\": \"Квартирник: акустика при свічках\",\n    \"description\": \"Три акустичні сети, чай і розмови до ночі. Вхід вільний, але можна закинути на збір.\",\n    \"starts_at\": \"2026-11-21T19:00:00+02:00\",\n    \"ends_at\": \"2026-11-21T23:00:00+02:00\",\n    \"lineup\": \"Гурт «Сірий кіт», Марта Ліщук\",\n    \"dress_code\": \"Вільний, взуття знімаємо на вході\",\n    \"entry_type\": \"free\",\n    \"price\": 0,\n    \"min_donation\": null,\n    \"fundraising_purpose\": \"Збір на теплові приціли\",\n    \"fundraising_url\": \"https://example.com/jar/thermal-scopes\",\n    \"fundraising_goal\": null,\n    \"capacity\": 25,\n    \"organizer\": 2,\n    \"venue\": 2,\n    \"category\": 2,\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  },\n  {\n    \"id\": 5,\n    \"title\": \"Кіновечір: «Тіні забутих предків»\",\n    \"description\": \"Дивимось класику Параджанова, після показу обговорення.\",\n    \"starts_at\": \"2026-11-27T18:30:00+02:00\",\n    \"ends_at\": \"2026-11-27T21:30:00+02:00\",\n    \"lineup\": \"\",\n    \"dress_code\": \"\",\n    \"entry_type\": \"free\",\n    \"price\": 0,\n    \"min_donation\": null,\n    \"fundraising_purpose\": \"\",\n    \"fundraising_url\": \"\",\n    \"fundraising_goal\": null,\n    \"capacity\": 60,\n    \"organizer\": 4,\n    \"venue\": 4,\n    \"category\": 5,\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  },\n  {\n    \"id\": 6,\n    \"title\": \"Караоке-батл факультетів\",\n    \"description\": \"ФІ проти ФЕН проти ФГН. Переможець отримує кубок і вічну славу.\",\n    \"starts_at\": \"2026-12-05T20:00:00+02:00\",\n    \"ends_at\": \"2026-12-06T01:00:00+02:00\",\n    \"lineup\": \"Ведуча — Оля Співоча\",\n    \"dress_code\": \"\",\n    \"entry_type\": \"donation\",\n    \"price\": 0,\n    \"min_donation\": null,\n    \"fundraising_purpose\": \"Збір на евакуаційне авто\",\n    \"fundraising_url\": \"https://example.com/jar/evacuation-car\",\n    \"fundraising_goal\": 120000,\n    \"capacity\": 80,\n    \"organizer\": 1,\n    \"venue\": 5,\n    \"category\": 4,\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  },\n  {\n    \"id\": 7,\n    \"title\": \"Новорічна тусовка Могилянки\",\n    \"description\": \"Головна вечірка року. Половина з кожного квитка йде на збір.\",\n    \"starts_at\": \"2026-12-20T21:00:00+02:00\",\n    \"ends_at\": \"2026-12-21T04:00:00+02:00\",\n    \"lineup\": \"DJ Ворон, Kyiv Brass Band\",\n    \"dress_code\": \"Святковий\",\n    \"entry_type\": \"ticket\",\n    \"price\": 300,\n    \"min_donation\": null,\n    \"fundraising_purpose\": \"Збір на евакуаційне авто\",\n    \"fundraising_url\": \"https://example.com/jar/evacuation-car\",\n    \"fundraising_goal\": 120000,\n    \"capacity\": 200,\n    \"organizer\": 1,\n    \"venue\": 1,\n    \"category\": 1,\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  },\n  {\n    \"id\": 8,\n    \"title\": \"Зимовий пікнік з глінтвейном\",\n    \"description\": \"Сніжки, термоси та гітара. Збираємось біля мосту.\",\n    \"starts_at\": \"2027-01-24T13:00:00+02:00\",\n    \"ends_at\": null,\n    \"lineup\": \"\",\n    \"dress_code\": \"Тепло вдягніться\",\n    \"entry_type\": \"donation\",\n    \"price\": 0,\n    \"min_donation\": 100,\n    \"fundraising_purpose\": \"Збір на теплові приціли\",\n    \"fundraising_url\": \"https://example.com/jar/thermal-scopes\",\n    \"fundraising_goal\": null,\n    \"capacity\": 60,\n    \"organizer\": 2,\n    \"venue\": 6,\n    \"category\": 6,\n    \"created_at\": \"2026-10-01T12:00:00+03:00\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Тусовка за id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/events/4/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "events",
+                "4",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/events/4/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "events",
+                    "4",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 4,\n  \"title\": \"Квартирник: акустика при свічках\",\n  \"description\": \"Три акустичні сети, чай і розмови до ночі. Вхід вільний, але можна закинути на збір.\",\n  \"starts_at\": \"2026-11-21T19:00:00+02:00\",\n  \"ends_at\": \"2026-11-21T23:00:00+02:00\",\n  \"lineup\": \"Гурт «Сірий кіт», Марта Ліщук\",\n  \"dress_code\": \"Вільний, взуття знімаємо на вході\",\n  \"entry_type\": \"free\",\n  \"price\": 0,\n  \"min_donation\": null,\n  \"fundraising_purpose\": \"Збір на теплові приціли\",\n  \"fundraising_url\": \"https://example.com/jar/thermal-scopes\",\n  \"fundraising_goal\": null,\n  \"capacity\": 25,\n  \"organizer\": 2,\n  \"venue\": 2,\n  \"category\": 2,\n  \"created_at\": \"2026-10-01T12:00:00+03:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 404: тусовки не існує",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 404\", function () {",
+                  "  pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Є пояснення в detail\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.property(\"detail\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/events/999/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "events",
+                "999",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "404 Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/events/999/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "events",
+                    "999",
+                    ""
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Тусовку не знайдено.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Створити тусовку за донат",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 201\", function () {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "pm.collectionVariables.set(\"new_event_id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/events/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "events",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Благодійна вечірка «Грудневий вайб»\",\n  \"description\": \"Вечірка з діджеями, усі донати йдуть на збір.\",\n  \"starts_at\": \"2026-12-12T21:00:00+02:00\",\n  \"ends_at\": \"2026-12-13T03:00:00+02:00\",\n  \"lineup\": \"DJ Ворон, DJ Pumpkin\",\n  \"dress_code\": \"Щось блискуче\",\n  \"entry_type\": \"donation\",\n  \"price\": 0,\n  \"min_donation\": 150,\n  \"fundraising_purpose\": \"Збір на FPV-дрони\",\n  \"fundraising_url\": \"https://example.com/jar/fpv-drones\",\n  \"fundraising_goal\": 50000,\n  \"capacity\": 120,\n  \"organizer\": 1,\n  \"venue\": 1,\n  \"category\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/events/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "events",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Благодійна вечірка «Грудневий вайб»\",\n  \"description\": \"Вечірка з діджеями, усі донати йдуть на збір.\",\n  \"starts_at\": \"2026-12-12T21:00:00+02:00\",\n  \"ends_at\": \"2026-12-13T03:00:00+02:00\",\n  \"lineup\": \"DJ Ворон, DJ Pumpkin\",\n  \"dress_code\": \"Щось блискуче\",\n  \"entry_type\": \"donation\",\n  \"price\": 0,\n  \"min_donation\": 150,\n  \"fundraising_purpose\": \"Збір на FPV-дрони\",\n  \"fundraising_url\": \"https://example.com/jar/fpv-drones\",\n  \"fundraising_goal\": 50000,\n  \"capacity\": 120,\n  \"organizer\": 1,\n  \"venue\": 1,\n  \"category\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 9,\n  \"title\": \"Благодійна вечірка «Грудневий вайб»\",\n  \"description\": \"Вечірка з діджеями, усі донати йдуть на збір.\",\n  \"starts_at\": \"2026-12-12T21:00:00+02:00\",\n  \"ends_at\": \"2026-12-13T03:00:00+02:00\",\n  \"lineup\": \"DJ Ворон, DJ Pumpkin\",\n  \"dress_code\": \"Щось блискуче\",\n  \"entry_type\": \"donation\",\n  \"price\": 0,\n  \"min_donation\": 150,\n  \"fundraising_purpose\": \"Збір на FPV-дрони\",\n  \"fundraising_url\": \"https://example.com/jar/fpv-drones\",\n  \"fundraising_goal\": 50000,\n  \"capacity\": 120,\n  \"organizer\": 1,\n  \"venue\": 1,\n  \"category\": 1,\n  \"created_at\": \"2026-11-18T03:04:24.860954+02:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 400: обов'язкові поля і неіснуюча категорія",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/events/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "events",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"\",\n  \"entry_type\": \"free\",\n  \"capacity\": 50,\n  \"organizer\": 1,\n  \"venue\": 1,\n  \"category\": 999\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/events/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "events",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"\",\n  \"entry_type\": \"free\",\n  \"capacity\": 50,\n  \"organizer\": 1,\n  \"venue\": 1,\n  \"category\": 999\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"title\": [\n    \"Це поле не може бути порожнім.\"\n  ],\n  \"starts_at\": [\n    \"Це поле обов'язкове.\"\n  ],\n  \"category\": [\n    \"Недопустимий первинний ключ \\\"999\\\" - об'єкт не існує.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 400: правила типу входу, часу і місткості",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/events/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "events",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Тусовка з помилками\",\n  \"starts_at\": \"2026-12-12T21:00:00+02:00\",\n  \"ends_at\": \"2026-12-12T18:00:00+02:00\",\n  \"entry_type\": \"donation\",\n  \"price\": 100,\n  \"capacity\": 500,\n  \"organizer\": 1,\n  \"venue\": 1,\n  \"category\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/events/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "events",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Тусовка з помилками\",\n  \"starts_at\": \"2026-12-12T21:00:00+02:00\",\n  \"ends_at\": \"2026-12-12T18:00:00+02:00\",\n  \"entry_type\": \"donation\",\n  \"price\": 100,\n  \"capacity\": 500,\n  \"organizer\": 1,\n  \"venue\": 1,\n  \"category\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"ends_at\": [\n    \"Час завершення має бути пізніше за час початку.\"\n  ],\n  \"price\": [\n    \"Ціну вказують лише для платного квитка.\"\n  ],\n  \"fundraising_url\": [\n    \"Для тусовки за донат вкажіть посилання на збір.\"\n  ],\n  \"capacity\": [\n    \"Локація вміщує лише 200 людей.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 400: платний квиток без ціни",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/events/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "events",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Настолки\",\n  \"starts_at\": \"2026-12-19T18:00:00+02:00\",\n  \"entry_type\": \"ticket\",\n  \"min_donation\": 50,\n  \"capacity\": 20,\n  \"organizer\": 3,\n  \"venue\": 3,\n  \"category\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/events/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "events",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Настолки\",\n  \"starts_at\": \"2026-12-19T18:00:00+02:00\",\n  \"entry_type\": \"ticket\",\n  \"min_donation\": 50,\n  \"capacity\": 20,\n  \"organizer\": 3,\n  \"venue\": 3,\n  \"category\": 3\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"price\": [\n    \"Для платного квитка вкажіть ціну більше 0.\"\n  ],\n  \"min_donation\": [\n    \"Мінімальний донат вказують лише для тусовки за донат.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Оновити тусовку",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/events/{{new_event_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "events",
+                "{{new_event_id}}",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Благодійна вечірка «Грудневий вайб»\",\n  \"description\": \"Вечірка з діджеями, усі донати йдуть на збір.\",\n  \"starts_at\": \"2026-12-12T21:00:00+02:00\",\n  \"ends_at\": \"2026-12-13T03:00:00+02:00\",\n  \"lineup\": \"DJ Ворон, DJ Pumpkin, special guest\",\n  \"dress_code\": \"Щось блискуче\",\n  \"entry_type\": \"donation\",\n  \"price\": 0,\n  \"min_donation\": 100,\n  \"fundraising_purpose\": \"Збір на FPV-дрони\",\n  \"fundraising_url\": \"https://example.com/jar/fpv-drones\",\n  \"fundraising_goal\": 50000,\n  \"capacity\": 120,\n  \"organizer\": 1,\n  \"venue\": 1,\n  \"category\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/events/{{new_event_id}}/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "events",
+                    "{{new_event_id}}",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Благодійна вечірка «Грудневий вайб»\",\n  \"description\": \"Вечірка з діджеями, усі донати йдуть на збір.\",\n  \"starts_at\": \"2026-12-12T21:00:00+02:00\",\n  \"ends_at\": \"2026-12-13T03:00:00+02:00\",\n  \"lineup\": \"DJ Ворон, DJ Pumpkin, special guest\",\n  \"dress_code\": \"Щось блискуче\",\n  \"entry_type\": \"donation\",\n  \"price\": 0,\n  \"min_donation\": 100,\n  \"fundraising_purpose\": \"Збір на FPV-дрони\",\n  \"fundraising_url\": \"https://example.com/jar/fpv-drones\",\n  \"fundraising_goal\": 50000,\n  \"capacity\": 120,\n  \"organizer\": 1,\n  \"venue\": 1,\n  \"category\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 9,\n  \"title\": \"Благодійна вечірка «Грудневий вайб»\",\n  \"description\": \"Вечірка з діджеями, усі донати йдуть на збір.\",\n  \"starts_at\": \"2026-12-12T21:00:00+02:00\",\n  \"ends_at\": \"2026-12-13T03:00:00+02:00\",\n  \"lineup\": \"DJ Ворон, DJ Pumpkin, special guest\",\n  \"dress_code\": \"Щось блискуче\",\n  \"entry_type\": \"donation\",\n  \"price\": 0,\n  \"min_donation\": 100,\n  \"fundraising_purpose\": \"Збір на FPV-дрони\",\n  \"fundraising_url\": \"https://example.com/jar/fpv-drones\",\n  \"fundraising_goal\": 50000,\n  \"capacity\": 120,\n  \"organizer\": 1,\n  \"venue\": 1,\n  \"category\": 1,\n  \"created_at\": \"2026-11-18T03:04:24.860954+02:00\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Видалити тусовку",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 204\", function () {",
+                  "  pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/events/{{new_event_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "events",
+                "{{new_event_id}}",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "204 No Content",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/events/{{new_event_id}}/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "events",
+                    "{{new_event_id}}",
+                    ""
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "body": ""
+            }
+          ]
+        },
+        {
+          "name": "Помилка 404: видалити неіснуючу тусовку",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 404\", function () {",
+                  "  pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test(\"Є пояснення в detail\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.property(\"detail\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/events/999/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "events",
+                "999",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "404 Not Found",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/events/999/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "events",
+                    "999",
+                    ""
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Тусовку не знайдено.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Загальні помилки",
+      "item": [
+        {
+          "name": "Помилка 405: метод не підтримується",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 405\", function () {",
+                  "  pm.response.to.have.status(405);",
+                  "});",
+                  "pm.test(\"Є пояснення в detail\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.property(\"detail\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/events/2/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "events",
+                "2",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"PATCH не підтримується\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "405 Method Not Allowed",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/events/2/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "events",
+                    "2",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"PATCH не підтримується\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Метод \\\"PATCH\\\" не дозволений.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Помилка 400: тіло запиту не є JSON",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 400\", function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categories/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": ",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/categories/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "categories",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"name\": ",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"JSON parse error - Expecting value: line 1 column 10 (char 9)\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000/api"
+    },
+    {
+      "key": "new_category_id",
+      "value": ""
+    },
+    {
+      "key": "new_organizer_id",
+      "value": ""
+    },
+    {
+      "key": "new_venue_id",
+      "value": ""
+    },
+    {
+      "key": "new_event_id",
+      "value": ""
+    }
+  ]
+}

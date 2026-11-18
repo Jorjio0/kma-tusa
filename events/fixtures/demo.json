@@ -1,0 +1,344 @@
+[
+  {
+    "model": "events.category",
+    "pk": 1,
+    "fields": {
+      "name": "Вечірка"
+    }
+  },
+  {
+    "model": "events.category",
+    "pk": 2,
+    "fields": {
+      "name": "Квартирник"
+    }
+  },
+  {
+    "model": "events.category",
+    "pk": 3,
+    "fields": {
+      "name": "Ніч настолок"
+    }
+  },
+  {
+    "model": "events.category",
+    "pk": 4,
+    "fields": {
+      "name": "Караоке"
+    }
+  },
+  {
+    "model": "events.category",
+    "pk": 5,
+    "fields": {
+      "name": "Кіновечір"
+    }
+  },
+  {
+    "model": "events.category",
+    "pk": 6,
+    "fields": {
+      "name": "Пікнік"
+    }
+  },
+  {
+    "model": "events.organizer",
+    "pk": 1,
+    "fields": {
+      "name": "Kyiv-Mohyla Party Crew",
+      "description": "Студентська команда, яка щомісяця робить тематичні благодійні вечірки.",
+      "contact_email": "partycrew@example.com",
+      "instagram_url": "https://instagram.com/example_party_crew",
+      "created_at": "2026-10-01T12:00:00+03:00"
+    }
+  },
+  {
+    "model": "events.organizer",
+    "pk": 2,
+    "fields": {
+      "name": "Акустичні вечори КМА",
+      "description": "Камерні квартирники з живою музикою від студентів і випускників.",
+      "contact_email": "acoustic@example.com",
+      "instagram_url": "",
+      "created_at": "2026-10-01T12:00:00+03:00"
+    }
+  },
+  {
+    "model": "events.organizer",
+    "pk": 3,
+    "fields": {
+      "name": "Клуб настолок «Кубик»",
+      "description": "Збираємось грати в настолки: від «Каркасона» до восьмигодинних стратегій.",
+      "contact_email": "",
+      "instagram_url": "https://instagram.com/example_kubyk",
+      "created_at": "2026-10-01T12:00:00+03:00"
+    }
+  },
+  {
+    "model": "events.organizer",
+    "pk": 4,
+    "fields": {
+      "name": "Кіноклуб «Могилянський кадр»",
+      "description": "Дивимось і обговорюємо українське та світове кіно.",
+      "contact_email": "kino@example.com",
+      "instagram_url": "",
+      "created_at": "2026-10-01T12:00:00+03:00"
+    }
+  },
+  {
+    "model": "events.venue",
+    "pk": 1,
+    "fields": {
+      "name": "Лофт «Цех»",
+      "type": "loft",
+      "district": "Поділ",
+      "address": "вул. Набережно-Лугова, 8",
+      "description": "Індустріальна зала з баром і танцполом.",
+      "capacity": 200
+    }
+  },
+  {
+    "model": "events.venue",
+    "pk": 2,
+    "fields": {
+      "name": "Квартира на Подолі",
+      "type": "apartment",
+      "district": "Поділ",
+      "address": "вул. Костянтинівська, 10, кв. 5",
+      "description": "Затишна квартира для квартирників.",
+      "capacity": 25
+    }
+  },
+  {
+    "model": "events.venue",
+    "pk": 3,
+    "fields": {
+      "name": "Антикафе «Лігво»",
+      "type": "other",
+      "district": "Поділ",
+      "address": "вул. Нижній Вал, 15",
+      "description": "Антикафе з великою колекцією настільних ігор.",
+      "capacity": 40
+    }
+  },
+  {
+    "model": "events.venue",
+    "pk": 4,
+    "fields": {
+      "name": "Кампус НаУКМА, корпус 1",
+      "type": "campus",
+      "district": "Поділ",
+      "address": "вул. Григорія Сковороди, 2",
+      "description": "Аудиторія 1-225 з проєктором.",
+      "capacity": 80
+    }
+  },
+  {
+    "model": "events.venue",
+    "pk": 5,
+    "fields": {
+      "name": "Бар «Підвал»",
+      "type": "bar",
+      "district": "Печерськ",
+      "address": "вул. Шовковична, 20",
+      "description": "Бар з караоке-системою.",
+      "capacity": 90
+    }
+  },
+  {
+    "model": "events.venue",
+    "pk": 6,
+    "fields": {
+      "name": "Пейзажна алея",
+      "type": "outdoor",
+      "district": "Шевченківський",
+      "address": "біля мосту закоханих",
+      "description": "Просто неба, місткість не обмежена.",
+      "capacity": null
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 1,
+    "fields": {
+      "title": "Посвята першокурсників",
+      "description": "Знайомство з Могилянкою та одне одним. Донати на збір.",
+      "starts_at": "2026-09-19T20:00:00+03:00",
+      "ends_at": "2026-09-20T02:00:00+03:00",
+      "lineup": "DJ Ворон",
+      "dress_code": "",
+      "entry_type": "donation",
+      "price": 0,
+      "min_donation": 100,
+      "fundraising_purpose": "Збір на FPV-дрони для підрозділу випускників КМА",
+      "fundraising_url": "https://example.com/jar/fpv-drones",
+      "fundraising_goal": 50000,
+      "capacity": 150,
+      "organizer": 1,
+      "venue": 1,
+      "category": 1,
+      "created_at": "2026-10-01T12:00:00+03:00"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 2,
+    "fields": {
+      "title": "Ніч настолок у «Лігві»",
+      "description": "Від «Кодових імен» до «Twilight Imperium». Правила пояснимо.",
+      "starts_at": "2026-11-07T18:00:00+02:00",
+      "ends_at": "2026-11-07T23:30:00+02:00",
+      "lineup": "",
+      "dress_code": "",
+      "entry_type": "ticket",
+      "price": 100,
+      "min_donation": null,
+      "fundraising_purpose": "",
+      "fundraising_url": "",
+      "fundraising_goal": null,
+      "capacity": 30,
+      "organizer": 3,
+      "venue": 3,
+      "category": 3,
+      "created_at": "2026-10-01T12:00:00+03:00"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 3,
+    "fields": {
+      "title": "Вечірка «Мокрий листопад»",
+      "description": "Осіння вечірка з трьома діджеями. Усі донати йдуть на збір.",
+      "starts_at": "2026-11-14T21:00:00+02:00",
+      "ends_at": "2026-11-15T03:00:00+02:00",
+      "lineup": "DJ Ворон, DJ Pumpkin, Ліза Хвиля",
+      "dress_code": "Щось жовте або синє",
+      "entry_type": "donation",
+      "price": 0,
+      "min_donation": 200,
+      "fundraising_purpose": "Збір на FPV-дрони для підрозділу випускників КМА",
+      "fundraising_url": "https://example.com/jar/fpv-drones",
+      "fundraising_goal": 50000,
+      "capacity": 150,
+      "organizer": 1,
+      "venue": 1,
+      "category": 1,
+      "created_at": "2026-10-01T12:00:00+03:00"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 4,
+    "fields": {
+      "title": "Квартирник: акустика при свічках",
+      "description": "Три акустичні сети, чай і розмови до ночі. Вхід вільний, але можна закинути на збір.",
+      "starts_at": "2026-11-21T19:00:00+02:00",
+      "ends_at": "2026-11-21T23:00:00+02:00",
+      "lineup": "Гурт «Сірий кіт», Марта Ліщук",
+      "dress_code": "Вільний, взуття знімаємо на вході",
+      "entry_type": "free",
+      "price": 0,
+      "min_donation": null,
+      "fundraising_purpose": "Збір на теплові приціли",
+      "fundraising_url": "https://example.com/jar/thermal-scopes",
+      "fundraising_goal": null,
+      "capacity": 25,
+      "organizer": 2,
+      "venue": 2,
+      "category": 2,
+      "created_at": "2026-10-01T12:00:00+03:00"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 5,
+    "fields": {
+      "title": "Кіновечір: «Тіні забутих предків»",
+      "description": "Дивимось класику Параджанова, після показу обговорення.",
+      "starts_at": "2026-11-27T18:30:00+02:00",
+      "ends_at": "2026-11-27T21:30:00+02:00",
+      "lineup": "",
+      "dress_code": "",
+      "entry_type": "free",
+      "price": 0,
+      "min_donation": null,
+      "fundraising_purpose": "",
+      "fundraising_url": "",
+      "fundraising_goal": null,
+      "capacity": 60,
+      "organizer": 4,
+      "venue": 4,
+      "category": 5,
+      "created_at": "2026-10-01T12:00:00+03:00"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 6,
+    "fields": {
+      "title": "Караоке-батл факультетів",
+      "description": "ФІ проти ФЕН проти ФГН. Переможець отримує кубок і вічну славу.",
+      "starts_at": "2026-12-05T20:00:00+02:00",
+      "ends_at": "2026-12-06T01:00:00+02:00",
+      "lineup": "Ведуча — Оля Співоча",
+      "dress_code": "",
+      "entry_type": "donation",
+      "price": 0,
+      "min_donation": null,
+      "fundraising_purpose": "Збір на евакуаційне авто",
+      "fundraising_url": "https://example.com/jar/evacuation-car",
+      "fundraising_goal": 120000,
+      "capacity": 80,
+      "organizer": 1,
+      "venue": 5,
+      "category": 4,
+      "created_at": "2026-10-01T12:00:00+03:00"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 7,
+    "fields": {
+      "title": "Новорічна тусовка Могилянки",
+      "description": "Головна вечірка року. Половина з кожного квитка йде на збір.",
+      "starts_at": "2026-12-20T21:00:00+02:00",
+      "ends_at": "2026-12-21T04:00:00+02:00",
+      "lineup": "DJ Ворон, Kyiv Brass Band",
+      "dress_code": "Святковий",
+      "entry_type": "ticket",
+      "price": 300,
+      "min_donation": null,
+      "fundraising_purpose": "Збір на евакуаційне авто",
+      "fundraising_url": "https://example.com/jar/evacuation-car",
+      "fundraising_goal": 120000,
+      "capacity": 200,
+      "organizer": 1,
+      "venue": 1,
+      "category": 1,
+      "created_at": "2026-10-01T12:00:00+03:00"
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 8,
+    "fields": {
+      "title": "Зимовий пікнік з глінтвейном",
+      "description": "Сніжки, термоси та гітара. Збираємось біля мосту.",
+      "starts_at": "2027-01-24T13:00:00+02:00",
+      "ends_at": null,
+      "lineup": "",
+      "dress_code": "Тепло вдягніться",
+      "entry_type": "donation",
+      "price": 0,
+      "min_donation": 100,
+      "fundraising_purpose": "Збір на теплові приціли",
+      "fundraising_url": "https://example.com/jar/thermal-scopes",
+      "fundraising_goal": null,
+      "capacity": 60,
+      "organizer": 2,
+      "venue": 6,
+      "category": 6,
+      "created_at": "2026-10-01T12:00:00+03:00"
+    }
+  }
+]
